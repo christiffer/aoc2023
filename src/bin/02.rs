@@ -27,7 +27,6 @@ pub fn part_two(input: &str) -> Option<u32> {
     Some(power)
 }
 
-
 fn is_game_possible(game: &Game, blocks: &str) -> u32 {
     let blocks = parse_blocks(blocks);
 
@@ -114,7 +113,6 @@ fn parse_blocks(hand_state: &str) -> Blocks {
     Blocks { value: values }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -123,7 +121,11 @@ mod tests {
     fn test_lowest_possible_bag() {
         let game = parse_game("Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green");
         let expected = Blocks {
-            value: HashMap::from([("blue".to_string(), 6), ("red".to_string(), 4), ("green".to_string(), 2)])
+            value: HashMap::from([
+                ("blue".to_string(), 6),
+                ("red".to_string(), 4),
+                ("green".to_string(), 2),
+            ]),
         };
         let expected_power: u32 = 48;
         let actual = lowest_possible_bag(&game);
