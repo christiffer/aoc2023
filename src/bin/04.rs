@@ -3,7 +3,7 @@ advent_of_code::solution!(4);
 pub fn part_one(input: &str) -> Option<u32> {
     let mut final_score = 0;
     for line in input.lines() {
-        let (winners, hands) = into_parts(line);
+        let (_, winners, hands) = into_parts(line);
         final_score += score(winners, hands);
     }
     Some(final_score)
@@ -13,9 +13,18 @@ pub fn part_two(_input: &str) -> Option<u32> {
     None
 }
 
-fn into_parts(input: &str) -> (Vec<u32>, Vec<u32>) {
-    let parts: Vec<&str> = input.split(':').last().unwrap().split('|').collect();
-    let winners: Vec<u32> = parts
+fn into_parts(input: &str) -> (u32, Vec<u32>, Vec<u32>) {
+    let parts: Vec<&str> = input.split(':').collect();
+    let game_number = parts
+        .first()
+        .unwrap()
+        .strip_prefix("Card")
+        .unwrap()
+        .trim()
+        .parse::<u32>()
+        .unwrap();
+    let game_parts: Vec<&str> = parts.last().unwrap().split('|').collect();
+    let winners: Vec<u32> = game_parts
         .first()
         .unwrap()
         .trim()
@@ -23,7 +32,7 @@ fn into_parts(input: &str) -> (Vec<u32>, Vec<u32>) {
         .filter(|s| !s.is_empty())
         .map(|s| s.parse::<u32>().unwrap())
         .collect();
-    let hands: Vec<u32> = parts
+    let hands: Vec<u32> = game_parts
         .get(1)
         .unwrap()
         .trim()
@@ -31,7 +40,7 @@ fn into_parts(input: &str) -> (Vec<u32>, Vec<u32>) {
         .filter(|s| !s.is_empty())
         .map(|s| s.parse::<u32>().unwrap())
         .collect();
-    (winners, hands)
+    (game_number, winners, hands)
 }
 
 fn score(winners: Vec<u32>, hand: Vec<u32>) -> u32 {
@@ -52,8 +61,11 @@ mod tests {
     fn test_into_parts() {
         let input = "Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53";
         let actual = into_parts(input);
-        let expected: (Vec<u32>, Vec<u32>) =
-            (vec![41, 48, 83, 86, 17], vec![83, 86, 6, 31, 17, 9, 48, 53]);
+        let expected: (u32, Vec<u32>, Vec<u32>) = (
+            1,
+            vec![41, 48, 83, 86, 17],
+            vec![83, 86, 6, 31, 17, 9, 48, 53],
+        );
         assert_eq!(actual, expected);
     }
 
